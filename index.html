@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Period Number Checker</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+        background-color: #000;
+        color: #fff;
+      }
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #000;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+      }
+      h1 {
+        font-size: 28px;
+        color: #fff;
+        margin-bottom: 20px;
+      }
+      input[type='number'] {
+        width: calc(100% - 100px);
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        transition: border-color 0.3s ease-in-out;
+      }
+      input[type='number']:focus {
+        outline: none;
+        border-color: #4caf50;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .result-container {
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        margin-top: 1rem;
+        position: relative;
+      }
+      .show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .result {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        transition: opacity 0.3s ease;
+      }
+      .classification,
+      .color,
+      .number-display,
+      .result-number {
+        color: #fff;
+      }
+      .big {
+        color: yellow;
+      }
+      .small {
+        color: #00b7ff;
+      }
+      .even {
+        color: red;
+      }
+      .odd {
+        color: green;
+      }
+      /* Media Query for Mobile Devices */
+      @media (max-width: 600px) {
+        body {
+          margin-top: 20px;
+        }
+        .container {
+          width: 90%;
+          padding: 15px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+        input[type='number'] {
+          width: calc(100% - 80px);
+          padding: 8px;
+          font-size: 14px;
+        }
+        button {
+          padding: 8px 16px;
+          font-size: 14px;
+        }
+        .result {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Color Prediction Hack By VIGESH</h1>
+      <input
+        type="number"
+        id="period"
+        placeholder="Enter period number"
+        min="0"
+        max="999"
+      />
+      <button onclick="checkPeriod()">Check</button>
+      <div class="result-container">
+        <div class="number-display" id="number-display"></div>
+        <div class="result" id="result"></div>
+      </div>
+    </div>
+
+    <script>
+      let currentPeriod = 0;
+      let timerInterval;
+
+      function checkPeriod() {
+        const periodInput = document.getElementById('period').value;
+        const period = parseInt(periodInput, 10);
+        const resultElement = document.getElementById('result');
+        const numberDisplayElement = document.getElementById('number-display');
+        const resultContainer = document.querySelector('.result-container');
+
+        numberDisplayElement.textContent = 'Loading...';
+        resultElement.textContent = '';
+
+        clearInterval(timerInterval); // Clear any existing timer
+
+        setTimeout(() => {
+          if (!isNaN(period) && period >= 0 && period <= 999) {
+            currentPeriod = period; // Set current period to the entered value
+
+            const lastDigit = currentPeriod % 10; // Get the last digit of the number
+
+            let classificationText;
+            let colorText;
+
+            if (lastDigit >= 0 && lastDigit <= 4) {
+              classificationText = '<span class="small">Small</span>';
+            } else {
+              classificationText = '<span class="big">Big</span>';
+            }
+
+            if (currentPeriod % 2 === 0) {
+              colorText = '<span class="even">Red</span>';
+            } else {
+              colorText = '<span class="odd">Green</span>';
+            }
+
+            numberDisplayElement.textContent = `Period Number: ${formatPeriod(
+              currentPeriod
+            )}`;
+            resultElement.innerHTML = `Result: ${classificationText} (${colorText}) ${lastDigit}`;
+
+            // Add class to trigger animation
+            resultContainer.classList.add('show');
+
+            // Start the timer to increment period number every minute
+            timerInterval = setInterval(incrementPeriod, 60000); // 60000 milliseconds = 1 minute
+          } else {
+            numberDisplayElement.textContent =
+              'Invalid Input: Please enter a number between 0 and 999';
+          }
+        }, 1000); // 1000 milliseconds = 1 second
+      }
+
+      // Function to increment the period number
+      function incrementPeriod() {
+        currentPeriod++;
+        if (currentPeriod > 999) {
+          currentPeriod = 0; // Wrap around if period exceeds 999
+        }
+        updatePeriodInformation();
+      }
+
+      // Function to update the displayed period information
+      function updatePeriodInformation() {
+        const lastDigit = currentPeriod % 10;
+
+        const resultElement = document.getElementById('result');
+        const numberDisplayElement = document.getElementById('number-display');
+        const resultContainer = document.querySelector('.result-container');
+
+        let classificationText;
+        let colorText;
+
+        if (lastDigit >= 0 && lastDigit <= 4) {
+          classificationText = '<span class="small">Small</span>';
+        } else {
+          classificationText = '<span class="big">Big</span>';
+        }
+
+        if (currentPeriod % 2 === 0) {
+          colorText = '<span class="even">Red</span>';
+        } else {
+          colorText = '<span class="odd">Green</span>';
+        }
+
+        numberDisplayElement.textContent = `Period Number: ${formatPeriod(
+          currentPeriod
+        )}`;
+        resultElement.innerHTML = `Result: ${classificationText} (${colorText}) ${lastDigit}`;
+
+        // Add class to trigger animation
+        resultContainer.classList.add('show');
+      }
+
+      // Function to format the period number as three digits (e.g., 001, 012, 123)
+      function formatPeriod(period) {
+        return period.toString().padStart(3, '0');
+      }
+
+      // Add event listener for Enter key press on input field
+      document
+        .getElementById('period')
+        .addEventListener('keydown', function (event) {
+          if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission behavior
+            checkPeriod(); // Call checkPeriod function
+          }
+        });
+
+      // Initial call to start the app
+      checkPeriod();
+    </script>
+  </body>
+</html>
